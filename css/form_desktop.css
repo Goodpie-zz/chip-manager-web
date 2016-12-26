@@ -1,0 +1,78 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+body, html {
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    background: #222;
+}
+
+#main_container {
+    color: #EEE;
+    padding-top: 50px;
+}
+
+.login {
+    height: 350px;
+}
+
+.registration {
+    height: 450px;
+}
+
+#form_parent_container {
+    background: #3a3a3a;
+    width: 600px;
+    margin: auto;
+    position: relative;
+}
+
+#form_header {
+    width: 100%;
+    background: #333333;
+    box-sizing: border-box;
+    padding: 20px;
+}
+
+#form_fields {
+    width: 100%;
+    padding: 20px;
+}
+
+#form_fields input[type=text], input[type=password] {
+    padding: 20px;
+    width: 85%;
+    margin-top: 10px;
+    background: #333333;
+    border: none;
+    color: #EEE;
+}
+
+#form_fields input[type=submit] {
+    bottom: 0px;
+    background: #fd625e;
+    border: none;
+    color: white;
+    padding: 20px;
+    position: absolute;
+    margin-bottom: 10px;
+    width: 92%;
+}
+
+:-moz-placeholder {
+    color: #EEE;
+}
+
+::-moz-placeholder {
+    color: #EEE;
+}
+
+::-webkit-input-placeholder {
+    color: #EEE;
+}
+
+:-ms-input-placeholder {
+    color: #EEE;
+}

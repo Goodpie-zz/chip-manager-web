@@ -1,0 +1,61 @@
+html, body {
+    height: 100%;
+    font-family: 'Lato', sans-serif;
+    background: #222;
+    color: #EEE;
+}
+
+#main_container {
+    margin: auto;
+    text-align: center;
+    padding: 10px;
+}
+
+.player_container {
+    height: 350px;
+    width: 300px;
+    text-align: center;
+    background: #3a3a3a;
+    display: inline-block;
+    margin: auto;
+    position: relative;
+    margin-top: 10px;
+    margin-left: 10px;
+}
+
+.player_name {
+    padding: 20px;
+    background: #fd625e;
+    font-weight: 700;
+    font-size: 24px;
+}
+
+.player_chips {
+    padding: 10px;
+}
+
+.player_stats {
+    padding: 10px;
+}
+
+.bidding {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+button {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    margin: 10px;
+    width: 280px;
+    marin: 0;
+    padding: 20px;
+    border: none;
+    background: #fd625e;
+    color: white;
+}
+
+button:hover {
+    background: red;
+}
