@@ -11,6 +11,3 @@ CREATE TABLE player (
   connected    INT(1)       NOT NULL DEFAULT 0,
   needs_update INT(1)       NOT NULL DEFAULT 0
 );
-
-SELECT *
-FROM player;

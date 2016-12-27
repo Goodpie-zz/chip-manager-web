@@ -1,48 +1,68 @@
 <?php
 session_start();
-require_once('php/connect.php');
+
+require("php/Helpers.php");
+
+// Get the local address
+$address = Helpers::get_address();
 
 // Error message
-$message = "Please fill in the form below";
+$error_messages = array(
+    'default' => "Please fill in the form below",
+    'invalid_credentials' => "Invalid username/password. Please try again!",
+    'unknown_user' => "User does not exist. Please <a href='http://$address/register.php'>register!</a>"
+);
 
-$config = parse_ini_file("config.ini");
-$address = $config['address'];
-echo "$address";
+// Set the default error message
+$error_message = $error_messages['default'];
 
-// Checks if the user has already logged in, redirects to correct page
-if (isset($_SESSION['logged_in']) == true && isset($_SESSION['id'])) {
-
+if (isset($_SESSION[Helpers::LOGGED_IN]) == true && isset($_SESSION[Helpers::PLAYER_SESSION])) {
+    // User already logged in, redirect to game page
     header("Location: http://$address/bid_management.php");
 }
 
 if (!empty($_POST)) {
 
-    echo "Getting connection...<br/>";
-    // Open connection
-    $connection = getConnection("config.ini");
+    // Establish connection
+    $connection = Helpers::get_connection();
 
     // Retrieve POST variables
     $user = strtoupper($_POST['user']);
     $password = $_POST['password'];
 
-    // SQL queries to check if the player actually exists
-    $validate_user_query = "SELECT * FROM `player` WHERE `username`='$user'";
-    $result = mysqli_query($connection, $validate_user_query);
-    $row = $result->fetch_assoc();
+    // Check if player exists
+    $query = "SELECT * FROM `player` WHERE `username`=?";
+    $statement = $connection->prepare($query);
+    $statement->bind_param('s', $user);
+    $statement->execute();
+    $result = $statement->get_result();
+
+    $row = $result->fetch_array(MYSQLI_ASSOC);
+
+    // Free memory
+    $statement->free_result();
+    $statement->close();
 
     // If the user exists, check password and start a session
     if ($row != NULL) {
         if ($row['password'] == $password) {
-            $id = $row['ID'];
-            $_SESSION['id'] = $id;
-            $_SESSION['logged_in'] = true;
-            header("Location: http://$address/bid_management.php"); // Redirect to bid page
+            // Fetch and update the player
+            $player = new Player($row['ID']);
+            $player->update_player();
+            $player->set_connection_status(1);
+
+            // Set session variables
+            $_SESSION[Helpers::PLAYER_SESSION] = $player;
+            $_SESSION[Helpers::LOGGED_IN] = true;
+
+            // Redirect the user to the game page
+            header("Location: http://$address/bid_management.php");
         } else {
             // Change message to tell use that they entered the wrong password
-            $message = "Invalid password. Please try again!";
+            $error_message = $error_messages['invalid_credentials'];
         }
     } else {
-        $message = "Please try again!";
+        $error_message = $error_messages['unknown_user'];
     }
 
     // Close connection
@@ -68,7 +88,7 @@ if (!empty($_POST)) {
         <div id="form_header">
             <h2>Login</h2>
             <p>Login to access the main game</p>
-            <p style="color:#fd625e"><?php echo $message; ?></p>
+            <p style="color:#fd625e"><?php echo $error_message; ?></p>
         </div>
         <div id="form_fields">
             <form method="POST" action="login.php">

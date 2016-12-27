@@ -1,29 +1,51 @@
 <?php
-// Get connection
-require_once('php/connect.php');
 
-$message = "Please fill in the form below";
+require("php/Helpers.php");
+
+$address = Helpers::get_address();
+
+$error_messages = array(
+    'empty_form' => 'Please fill in the form below',
+    'existing_user' => 'Sorry, this user already exists',
+);
+
+$error_message = $error_messages['empty_form'];
 
 if (!empty($_POST)) {
     // Open connection
-    $connection = getConnection("config.ini");
+    $connection = Helpers::get_connection();
 
     // Retrieve POST parameters
-    $name = $_POST['name'];
-    $user = strtoupper($_POST['user']);
+    $username = $_POST['name'];
     $password = $_POST['password'];
 
     // Checks if the user already exists
-    $check_username_query = "SELECT * FROM `player` WHERE `username`='$user'";
-    $user_result = mysqli_query($connection, $check_username_query);
-    $row = $user_result->fetch_assoc();
+    $check_username_query = "SELECT * FROM `player` WHERE `username`=?";
+    $user_statement = $connection->prepare($check_username_query);
+    $user_statement->bind_param('s', $username);
+    $user_statement->execute();
+    $user_result = $user_statement->get_result();
+
+    $row = $user_result->fetch_array(MYSQLI_ASSOC);
+
+    // Free memory
+    $user_statement->free_result();
+    $user_statement->close();
 
     // IF the user doesn't exists, create the player
-    if ($row == NULL) {
-        $query = "INSERT INTO `player` (`username`, `password`, `name`) VALUES ('$user', '$password', '$name')";
-        $connection->query($query);
+    if (!$row) {
+
+        // Prepare and execute query
+        $query = "INSERT INTO `player` (`username`, `password`, `chips`, `current_bid`) VALUES (?, ?, 100, 0)";
+        $statement = $connection->prepare($query);
+        $statement->bind_param('ss', $username, $password);
+        $statement->execute();
+
+        // Redirect to login page once successful
+        header("Location: http://$address/login.php");
     } else {
-        $message = "Sorry, that username already exists";
+        // Username already exists
+        $error_message = $error_messages['existing_user'];
     }
 
     // Close connection
@@ -41,7 +63,7 @@ if (!empty($_POST)) {
     <meta charset="utf-8">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,100,900' rel='stylesheet' type='text/css'>
     <!-- Lato Light, Normal, Bold -->
-    <link rel="stylesheet" href="css/register_style.css">
+    <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
@@ -51,11 +73,11 @@ if (!empty($_POST)) {
         <div id="form_header">
             <h2>Register a Player</h2>
             <p>Register a player and start of with 500 chips!</p>
-            <p style="color:#fd625e"><?php echo $message; ?></p>
+            <p style="color:#fd625e"><?php echo $error_message; ?></p>
         </div>
         <!-- Form for the user to fill out to create their account -->
         <div id="form_fields">
-            <form method="POST" action="create_player.php">
+            <form method="POST" action="register.php">
                 <input type="text" name="name" placeholder="Name" maxlength="20"><br/>
                 <input type="text" name="user" placeholder="Username (Initials)" maxlength="4"><br/>
                 <input type="password" name="password" placeholder="Password" maxlength="20"><br/>

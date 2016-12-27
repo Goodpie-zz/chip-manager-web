@@ -14,22 +14,16 @@ class Player
     /**
      * Player constructor.
      * @param $id
-     * @param $username
-     * @param $chips
-     * @param $chips_won
-     * @param $chips_lost
-     * @param $wins
-     * @param $losses
      */
-    public function __construct($id, $username, $chips, $chips_won, $chips_lost, $wins, $losses)
+    public function __construct($id)
     {
         $this->id = $id;
-        $this->username = $username;
-        $this->chips = $chips;
-        $this->chips_won = $chips_won;
-        $this->chips_lost = $chips_lost;
-        $this->games_won = $wins;
-        $this->games_lost = $losses;
+        $this->username = "username";
+        $this->chips = 0;
+        $this->chips_won = 0;
+        $this->chips_lost = 0;
+        $this->games_won = 0;
+        $this->games_lost = 0;
         $this->current_bid = 0; // Default current bid to 0
     }
 
@@ -38,9 +32,7 @@ class Player
      */
     public function place_bid($amount)
     {
-        require_once("connect.php");
-
-        $connection = getConnection();
+        $connection = Helpers::get_connection();
 
         // Fetch the current values from the db
         $select_success = false;
@@ -78,12 +70,10 @@ class Player
 
     public function set_connection_status($connected)
     {
-        require_once("connect.php");
-
         // Check that we have a valid parameter
         if ($connected == Helpers::CONNECTED || $connected == Helpers::DISCONNECTED) {
             // Establish connection
-            $connection = getConnection();
+            $connection = Helpers::get_connection();
 
             // Prepare statement and execute
             $query = "UPDATE `player` SET `connected`=? WHERE ID=?";
@@ -138,12 +128,10 @@ class Player
      */
     public function update_player()
     {
-        require_once("connect.php");
-
         if ($this->needs_updating()) {
 
             // Establish connection
-            $connection = getConnection();
+            $connection = Helpers::get_connection();
 
             // Prepare the query and execute it
             $query = "SELECT * FROM `player` WHERE 'id'=?";
@@ -189,10 +177,8 @@ class Player
      */
     private function needs_updating()
     {
-        require_once("connect.php");
-
         // Establish connection
-        $connection = getConnection();
+        $connection = Helpers::get_connection();
 
         $needs_updating = false;
 
@@ -215,5 +201,103 @@ class Player
 
         return $needs_updating;
     }
+
+    /**
+     * Check if the user is connected
+     * @return bool
+     */
+    public function is_connected()
+    {
+        // Establish connection
+        $connection = Helpers::get_connection();
+
+        $connected = false;
+
+        // Prepare and execute query
+        $query = "SELECT `connected` FROM `player` WHERE `ID`=?";
+        $statement = $connection->prepare($query);
+        $statement->bind_param("i", $this->id);
+        $statement->execute();
+
+        // Parse the results
+        $result = $statement->get_result();
+        if ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+            $connected = $row['connected'];
+        }
+
+        $statement->free_result();
+        $statement->close();
+
+        // Close connection
+        $connection->close();
+
+        return $connected;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getId()
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChips(): int
+    {
+        return $this->chips;
+    }
+
+    /**
+     * @return int
+     */
+    public function getCurrentBid(): int
+    {
+        return $this->current_bid;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChipsWon(): int
+    {
+        return $this->chips_won;
+    }
+
+    /**
+     * @return int
+     */
+    public function getChipsLost(): int
+    {
+        return $this->chips_lost;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGamesWon(): int
+    {
+        return $this->games_won;
+    }
+
+    /**
+     * @return int
+     */
+    public function getGamesLost(): int
+    {
+        return $this->games_lost;
+    }
+
+
 
 }
