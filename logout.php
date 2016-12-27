@@ -1,16 +1,19 @@
 <?php
+include('php/Player.php');
+require('php/Helpers.php');
+
 session_start();
-require_once('php/connect.php');
-$connection = getConnection("config.ini");
-if (isset($_GET['id'])) {
-    $id = $_GET['id'];
-} else {
-    $id = $_SESSION['id'];
-    unset($_SESSION['id']);
-    unset($_SESSION['loggin_in']);
+
+if (isset($_SESSION[Helpers::LOGGED_IN]) && isset($_SESSION[Helpers::PLAYER_SESSION])) {
+    // Disconnect player
+    $player = $_SESSION[Helpers::PLAYER_SESSION];
+    $player->set_connection_status(0);
+
+    // Unset the session variables
+    unset($_SESSION[Helpers::LOGGED_IN]);
+    unset($_SESSION[Helpers::PLAYER_SESSION]);
 }
 
-$connection->query("UPDATE `player` SET `connected`=0 WHERE `ID` =$id");
-
-
-?>
+// Redirect the user to the login page
+$address = Helpers::get_address();
+header("Location: http://$address/login.php");

@@ -1,17 +1,19 @@
 <?php
 // Starting the session
-session_start();
-require_once('php/connect.php');
+include('php/Player.php');
 
-// Checks if a session has been started
-if (!isset($_SESSION['logged_in']) == true) {
+session_start();
+
+require('php/Helpers.php');
+
+// Make sure the user is already logged in
+if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SESSION])) {
+    // Redirect user to the login page if invalid session variables
     $address = Helpers::get_address();
-    header("Location: http://$address/login.php?memes=true");
+    header("Location: http://$address/login.php");
 } else {
-    $connection = getConnection("config.ini");
-    $id = $_SESSION['id'];
-    $connection->query("UPDATE `player` SET `connected`=1 WHERE `ID`=$id");
-    $connection->close();
+    $player = $_SESSION[Helpers::PLAYER_SESSION];
+    $player->update_player();
 }
 
 ?>

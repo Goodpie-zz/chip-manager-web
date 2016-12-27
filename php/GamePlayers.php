@@ -17,6 +17,8 @@ class GamePlayers
      */
     public function check_connected_players()
     {
+        require('php/Helpers.php');
+
         // Establish connection
         $connection = Helpers::get_connection();
 
@@ -29,8 +31,7 @@ class GamePlayers
         // Parse results
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             // Fetch all the player information
-            $new_player = new Player($row['ID']);
-            $new_player->update_player();
+            $new_player = $row['ID'];
 
             // Just refresh all the current players
             $this->players = array();

@@ -1,16 +1,18 @@
 <?php
-session_start();
-// Open Connection
-require_once('php/connect.php');
-$connection = getConnection("config.ini");
 
-// Retrieve post variables
-if (isset($_GET['id']) && isset($_GET['amount'])) {
-    $bid_amount = $_GET['amount'];
-    $id = $_GET['id'];
-} else {
-    $bid_amount = $_POST['amount'];
-    $id = $_SESSION['id'];
+include('php/GamePlayers.php');
+require('php/Helpers.php');
+
+session_start();
+
+$connection = Helpers::get_connection();
+
+// Get player information from session
+if (isset($_SESSION[Helpers::PLAYER_SESSION]) && isset($_SESSION[Helpers::LOGGED_IN])) {
+    // Load player information
+    $player = $_SESSION[Helpers::PLAYER_SESSION];
+    $player->load_player_information();
+    $player_information = $player->get_all_player_info();
 }
 
 
@@ -40,4 +42,3 @@ echo json_encode($player);
 
 // Close connection
 $connection->close();
-?>

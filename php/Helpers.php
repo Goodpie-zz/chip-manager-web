@@ -52,6 +52,10 @@ class Helpers
         }
     }
 
+    /**
+     * Logs error message to file
+     * @param $message
+     */
     public static final function log_error_message($message)
     {
         $config = parse_ini_file("config.ini");

@@ -3,15 +3,11 @@
 session_start();
 
 // Connect to database
-require_once('php/connect.php');
-$connection = getConnection("config.ini");
+require_once('php/Helpers.php');
 
-if (isset($_SESSION['id'])) {
-    // Set the player as connected
-    $id = $_SESSION['id'];
-    $connection->query("UPDATE `player` SET `connected`=1 WHERE `ID`=$id");
+// Get the current user
+if (isset($_SESSION[Helpers::PLAYER_SESSION])) {
+    $player = $_SESSION[Helpers::PLAYER_SESSION];
+    $player->set_connection_status(1);
 }
 
-// Close connection
-$connection->close();
-?>
