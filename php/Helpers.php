@@ -13,22 +13,23 @@ class Helpers
     /**
      * Gets the address of the server
      * @return mixed
+     * @internal param bool $root
      */
     public static final function get_address()
     {
-        $config = parse_ini_file("config.ini");
-        $address = $config['address'];
-        return $address;
+        return $_SERVER['SERVER_ADDR'];
     }
 
     /**
      * Establish connection to database
      * @return mysqli
+     * @internal param bool $root
      */
     public static final function get_connection()
     {
         // Load the config file
-        $config = parse_ini_file("config.ini");
+        $config = parse_ini_file(__DIR__ . '/../config.ini');
+
 
         // Setup the connection variables
         $username = $config['username'];

@@ -1,6 +1,7 @@
 <?php
 
-require('../php/Helpers.php');
+include ('../php/Player.php');
+require ('../php/Helpers.php');
 
 // Player defaults to null
 $player = null;
@@ -26,7 +27,7 @@ if ($player != null) {
         $return_data = array('data' => $player->get_all_info());
     } else {
         // Failed to fetch data so return error message
-        $return_data = array('error' => "Unable to load player $player->getId() information");
+        $return_data = array('error' => "Unable to load player $id information");
     }
 }
 

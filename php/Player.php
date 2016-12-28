@@ -1,5 +1,7 @@
 <?php
 
+require (__DIR__ . '/Helpers.php');
+
 class Player
 {
     private $id;
@@ -29,43 +31,43 @@ class Player
 
     /**
      * @param $amount
+     * @return bool
      */
     public function place_bid($amount)
     {
         $connection = Helpers::get_connection();
+        $bid_placed = false;
 
-        // Fetch the current values from the db
-        $select_success = false;
-        $select_query = "SELECT `current_bid`, `chips` FROM `player` WHERE `ID`=?";
-        $select_statement = $connection->prepare($select_query);
-        $select_statement->bind_param('i', $this->id);
-        $select_statement->execute();
+        if ($amount <= $this->chips && $amount > 0) {
+            // Fetch the current values from the db
+            $select_success = false;
+            $select_query = "SELECT current_bid, chips FROM player WHERE ID=$this->id LIMIT 1";
 
-        // Fetch results from database
-        $result = $select_statement->get_result();
-        if ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            $select_success = true;
+            // Fetch results from database
+            $result = $connection->query($select_query);
+            if ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+                $select_success = true;
 
-            // Update the local parameters to match database
-            $this->current_bid = $row['current_bid'] + $amount;
-            $this->chips = $row['chips'] - $amount;
-        }
+                // Update the local parameters to match database
+                $this->current_bid = $row['current_bid'] + $amount;
+                $this->chips = $row['chips'] - $amount;
+            }
 
-        // Free memory
-        $select_statement->free_result();
-        $select_statement->close();
-
-        if ($select_success) {
-            // Update the database with the new values
-            $update_query = "UPDATE `player` SET `current_bid` = ?, chips = ? WHERE `ID`=?";
-            $update_statement = $connection->prepare($update_query);
-            $update_statement->bind_param('iii', $this->current_bid, $this->chips, $this->id);
-            $update_statement->execute();
-            $update_statement->close();
+            if ($select_success) {
+                // Update the database with the new values
+                $update_query = "UPDATE player SET current_bid = ?, chips = ? WHERE ID=?";
+                $update_statement = $connection->prepare($update_query);
+                $update_statement->bind_param('iii', $this->current_bid, $this->chips, $this->id);
+                $update_statement->execute();
+                $update_statement->close();
+                $bid_placed = true;
+            }
         }
 
         // Close connection
         $connection->close();
+
+        return $bid_placed;
     }
 
     public function set_connection($connected)
@@ -142,6 +144,7 @@ class Player
      */
     public function update()
     {
+        $updated = false;
         if ($this->needs_update()) {
 
             $connection = Helpers::get_connection();
@@ -158,7 +161,12 @@ class Player
 
             // Close connection
             $connection->close();
+
+            $updated = true ;
+            $this->set_needs_update(0);
         }
+
+        return $updated;
     }
 
     /**
@@ -173,20 +181,15 @@ class Player
         $needs_updating = false;
 
         // Prepare and execute query
-        $query = "SELECT `needs_update` FROM `player` WHERE `ID`=?";
-        $statement = $connection->prepare($query);
-        $statement->bind_param("i", $this->id);
-        $statement->execute();
+        $query = "SELECT needs_update FROM player WHERE ID=$this->id";
 
         // Parse the results
-        $result = $statement->get_result();
+        $result = $connection->query($query);
         if ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $needs_updating = $row['needs_update'];
         }
 
-        // Free memory and close connection
-        $statement->free_result();
-        $statement->close();
+        // c3lose connection
         $connection->close();
 
         return $needs_updating;
@@ -204,13 +207,15 @@ class Player
         $success = true;
 
         // Prepare the query and execute it
-        $query = "SELECT * FROM `player` WHERE 'id'=?";
-        $statement = $connection->prepare($query);
-        $statement->bind_param('i', $id);
-        $statement->execute();
+        $query = "SELECT * FROM player WHERE ID=$this->id LIMIT 1";
 
         // Get the results from the query
-        $result = $statement->get_result();
+        $result = $connection->query($query);
+
+        if (!$result)
+        {
+            echo $connection->error;
+        }
 
         // If succeeded, fetch and parse the results
         if ($player_row = $result->fetch_array(MYSQLI_ASSOC)) {
@@ -224,12 +229,9 @@ class Player
             $this->games_won = $player_row['games_won'];
             $this->games_lost = $player_row['games_lost'];
         } else {
-            $success = true;
+            $success = false;
         }
 
-        // Free memory
-        $statement->free_result();
-        $statement->close();
 
         $connection->close();
 
@@ -248,19 +250,13 @@ class Player
         $connected = false;
 
         // Prepare and execute query
-        $query = "SELECT `connected` FROM `player` WHERE `ID`=?";
-        $statement = $connection->prepare($query);
-        $statement->bind_param("i", $this->id);
-        $statement->execute();
+        $query = "SELECT connected FROM player WHERE ID=$this->id LIMIT 1";
 
         // Parse the results
-        $result = $statement->get_result();
+        $result = $connection->query($query);
         if ($row = $result->fetch_array(MYSQLI_ASSOC)) {
             $connected = $row['connected'];
         }
-
-        $statement->free_result();
-        $statement->close();
 
         // Close connection
         $connection->close();
