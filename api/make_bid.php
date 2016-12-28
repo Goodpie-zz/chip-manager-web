@@ -25,7 +25,14 @@ if (isset($_POST[ID]) && isset($_POST[AMOUNT])) {
 if ($id != null && $amount != null) {
     // Make bid and update player information
     $player = new Player($id);
-    $player->load_information();
-    $player->place_bid($amount);
-    $player->set_needs_update(1);
+
+    // Make sure the player information is loaded correctly
+    if ($player->load_information()) {
+
+        // Make sure the bid was placed correctly
+        if ($player->place_bid($amount)) {
+            $player->set_needs_update(1);
+        }
+    }
+
 }

@@ -1,6 +1,6 @@
 <?php
 
-require (__DIR__ . '/Helpers.php');
+require_once(__DIR__ . '/../php/Helpers.php');
 
 class Player
 {
@@ -87,20 +87,6 @@ class Player
             // Close connection
             $connection->close();
         }
-    }
-
-    public function set_needs_update($needs_update)
-    {
-        $connection = Helpers::get_connection();
-
-        // Update the status of needs update on player
-        $query = "UPDATE `player` SET `needs_update`=? WHERE ID=?";
-        $statement = $connection->prepare($query);
-        $statement->bind_param('ii', $needs_update, $this->id);
-        $statement->execute();
-        $statement->close();
-
-        $connection->close();
     }
 
     /**
@@ -236,6 +222,20 @@ class Player
         $connection->close();
 
         return $success;
+    }
+
+    public function set_needs_update($needs_update)
+    {
+        $connection = Helpers::get_connection();
+
+        // Update the status of needs update on player
+        $query = "UPDATE `player` SET `needs_update`=? WHERE ID=?";
+        $statement = $connection->prepare($query);
+        $statement->bind_param('ii', $needs_update, $this->id);
+        $statement->execute();
+        $statement->close();
+
+        $connection->close();
     }
 
     /**

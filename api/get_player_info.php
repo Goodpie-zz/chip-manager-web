@@ -1,7 +1,7 @@
 <?php
 
-include ('../php/Player.php');
-require ('../php/Helpers.php');
+include(__DIR__ . '/../php/Player.php');
+require_once(__DIR__ . '/../php/Helpers.php');
 
 // Player defaults to null
 $player = null;
