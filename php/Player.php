@@ -70,6 +70,60 @@ class Player
         return $bid_placed;
     }
 
+    public function reset_bid()
+    {
+        // Establish connection
+        $connection = Helpers::get_connection();
+
+        $return_amount = 0;
+
+        // First select the amount of bid
+        $select_query = "SELECT * FROM player WHERE ID=$this->id LIMIT 1";
+        $selected_result = $connection->query($select_query);
+
+        if (!$selected_result) {
+            echo $connection->error . "<br/>";
+        }
+
+        if ($row = $selected_result->fetch_array(MYSQLI_ASSOC)) {
+            $return_amount = (int)$row['current_bid'];
+        }
+
+        // Now update the user to have 0 as current_bid
+        $this->current_bid = 0;
+        echo $this->current_bid . "\n";
+        $update_query = "UPDATE player SET current_bid = ? WHERE ID=$this->id";
+        $statement = $connection->prepare($update_query);
+        $statement->bind_param("i", $this->current_bid);
+        $statement->execute();
+
+        // Close statement
+        $statement->close();
+
+        // Close connection
+        $connection->close();
+
+        // Player now needs updating
+        $this->set_needs_update(1);
+
+        // Return the amount of chips that were in the bid
+        return $return_amount;
+    }
+
+    public function set_needs_update($needs_update)
+    {
+        $connection = Helpers::get_connection();
+
+        // Update the status of needs update on player
+        $query = "UPDATE `player` SET `needs_update`=? WHERE ID=?";
+        $statement = $connection->prepare($query);
+        $statement->bind_param('ii', $needs_update, $this->id);
+        $statement->execute();
+        $statement->close();
+
+        $connection->close();
+    }
+
     public function set_connection($connected)
     {
         // Check that we have a valid parameter
@@ -198,11 +252,6 @@ class Player
         // Get the results from the query
         $result = $connection->query($query);
 
-        if (!$result)
-        {
-            echo $connection->error;
-        }
-
         // If succeeded, fetch and parse the results
         if ($player_row = $result->fetch_array(MYSQLI_ASSOC)) {
 
@@ -222,20 +271,6 @@ class Player
         $connection->close();
 
         return $success;
-    }
-
-    public function set_needs_update($needs_update)
-    {
-        $connection = Helpers::get_connection();
-
-        // Update the status of needs update on player
-        $query = "UPDATE `player` SET `needs_update`=? WHERE ID=?";
-        $statement = $connection->prepare($query);
-        $statement->bind_param('ii', $needs_update, $this->id);
-        $statement->execute();
-        $statement->close();
-
-        $connection->close();
     }
 
     /**

@@ -78,4 +78,17 @@ class PlayerTest extends PHPUnit_Framework_TestCase
         $this->assertTrue(!$this->player->place_bid(-10));
         $this->assertTrue(!$this->player->place_bid(0));
     }
+
+    public function test_reset_bid()
+    {
+        $bid_amount = 5;
+
+        if ($this->player->place_bid($bid_amount)) {
+            $result = $this->player->reset_bid();
+            $this->assertTrue($this->player->get_current_bid() == 0);
+            $this->assertTrue($result == $bid_amount);
+
+        }
+
+    }
 }
