@@ -52,7 +52,7 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
         <button id="make_bid" onclick="make_bid()">Submit Bid</button>
     </div>
 </div>
-<script src="js/jquery.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="js/bid_handling.js"></script>
 </body>
 </html>
