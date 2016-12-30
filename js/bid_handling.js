@@ -16,7 +16,7 @@ $(document).ready(function () {
 
 function log_in_user() {
     $.ajax({
-        url: "keep_user_logged_in.php"
+        url: "refresh_user.php"
     });
 }
 

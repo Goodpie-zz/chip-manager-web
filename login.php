@@ -2,6 +2,7 @@
 session_start();
 
 require("php/Helpers.php");
+require("php/Player.php");
 
 // Get the local address
 $address = Helpers::get_address();
@@ -18,7 +19,7 @@ $error_message = $error_messages['default'];
 
 if (isset($_SESSION[Helpers::LOGGED_IN]) == true && isset($_SESSION[Helpers::PLAYER_SESSION])) {
     // User already logged in, redirect to game page
-    header("Location: http://$address/bid_management.php");
+    header("Location: http://$address/play.php");
 }
 
 if (!empty($_POST)) {
@@ -31,7 +32,7 @@ if (!empty($_POST)) {
     $password = $_POST['password'];
 
     // Check if player exists
-    $query = "SELECT * FROM `player` WHERE `username`=?";
+    $query = "SELECT * FROM `player` WHERE `username`=? LIMIT 1";
     $statement = $connection->prepare($query);
     $statement->bind_param('s', $user);
     $statement->execute();
@@ -48,15 +49,15 @@ if (!empty($_POST)) {
         if ($row['password'] == $password) {
             // Fetch and update the player
             $player = new Player($row['ID']);
-            $player->update_player();
-            $player->set_connection_status(1);
+            $player->update();
+            $player->set_connection(1);
 
             // Set session variables
             $_SESSION[Helpers::PLAYER_SESSION] = $player;
             $_SESSION[Helpers::LOGGED_IN] = true;
 
             // Redirect the user to the game page
-            header("Location: http://$address/bid_management.php");
+            header("Location: http://$address/play.php");
         } else {
             // Change message to tell use that they entered the wrong password
             $error_message = $error_messages['invalid_credentials'];
@@ -92,7 +93,7 @@ if (!empty($_POST)) {
         </div>
         <div id="form_fields">
             <form method="POST" action="login.php">
-                <input type="text" name="user" placeholder="Username (Initials)" maxlength="4"><br/>
+                <input type="text" name="user" placeholder="Username (Initials)" maxlength="32"><br/>
                 <input type="password" name="password" placeholder="Password" maxlength="20"><br/>
                 <input type="submit" id="login_submit" value="Login">
             </form>
