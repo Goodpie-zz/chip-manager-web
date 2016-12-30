@@ -1,8 +1,18 @@
 <?php
 
+/**
+ * Logs in a player and sets their connection status to connected as well as
+ * retrieve information about the player.
+ * Should only be handled using POST request.
+ * GET request is for debugging only.
+ */
+
+
+// Import the required classes
 include(__DIR__ . '/../php/Player.php');
 require_once(__DIR__ . '/../php/Helpers.php');
 
+// Set constants for overly used strings
 const USERNAME = "username";
 const PASSWORD = "password";
 
@@ -12,6 +22,7 @@ $password = null;
 
 $found_user = false;
 
+// Default return data if nothing works
 $return_data = array(
     'success' => 0,
     'error' => 'Invalid parameters found'
@@ -36,14 +47,12 @@ if ($username != null && $password != null) {
     $query = "SELECT ID FROM player WHERE username='$username' LIMIT 1";
     $result = $connection->query($query);
 
-    if (!$result) {
-        echo $connection->error . "<br/>";
-    }
-
     // Get results
     if ($row = $result->fetch_array(MYSQLI_ASSOC)) {
         $id = $row['ID'];
         $player = new Player($id);
+
+        // Check that the player can load information
         if ($player->load_information()) {
             $player->set_connection(1);
 
@@ -67,5 +76,6 @@ if ($username != null && $password != null) {
 
 }
 
+// Return JSON encoded data
 echo json_encode($return_data);
 

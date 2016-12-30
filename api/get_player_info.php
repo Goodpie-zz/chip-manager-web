@@ -1,13 +1,20 @@
 <?php
 
+/**
+ * Retrieves all information about the player
+ */
+
 include(__DIR__ . '/../php/Player.php');
 require_once(__DIR__ . '/../php/Helpers.php');
 
 // Player defaults to null
 $player = null;
 
-// Default return data is null
-$return_data = array('error' => 'Invalid parameters');
+// Set default return message
+$return_data = array(
+    'error' => 'Invalid parameters',
+    'success' => 0
+);
 
 // Get request params
 if (isset($_POST['id'])) {
@@ -23,11 +30,15 @@ if (isset($_POST['id'])) {
 // If player was found,
 if ($player != null) {
     if ($player->load_information()) {
-        // Return player information
-        $return_data = array('data' => $player->get_all_info());
+
+        // Set success data
+        $return_data['data'] = $player->get_all_info();
+        $return_data['error'] = 0;
+        $return_data['success'] = 1;
+
     } else {
         // Failed to fetch data so return error message
-        $return_data = array('error' => "Unable to load player $id information");
+        $return_data['error'] = "Unable to load player $id information";
     }
 }
 

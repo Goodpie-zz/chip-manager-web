@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * Makes a bid for the player based on the ID given
+ * Safety checks are handled in @Player class
+ */
+
 include(__DIR__ . '/../php/Player.php');
 require_once(__DIR__ . '/../php/Helpers.php');
 
@@ -28,8 +33,6 @@ if (isset($_POST[ID]) && isset($_POST[AMOUNT])) {
     $amount = $_GET[AMOUNT];
 }
 
-
-echo $id . " " . $amount . "\n";
 // If ID was set, place bid using player object
 // Error checking on amount done via player method
 if ($id != null && $amount != null) {
