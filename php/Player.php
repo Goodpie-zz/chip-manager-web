@@ -75,6 +75,35 @@ class Player
         // Establish connection
         $connection = Helpers::get_connection();
 
+        $bid = -1;
+
+        // First select the amount of bid
+        $select_query = "SELECT * FROM player WHERE ID=$this->id LIMIT 1";
+        $selected_result = $connection->query($select_query);
+
+        if ($row = $selected_result->fetch_array(MYSQLI_ASSOC)) {
+            $bid = (int)$row['current_bid'];
+        }
+
+        // Now update the user to have 0 as current_bid
+        $this->current_bid = 0;
+        $update_query = "UPDATE player SET current_bid = ?, chips = chips + ? WHERE ID=$this->id";
+        $statement = $connection->prepare($update_query);
+        $statement->bind_param("ii", $this->current_bid, $bid);
+        $statement->execute();
+
+        // Close statement
+        $statement->close();
+
+        // Close connection
+        $connection->close();
+    }
+
+    public function remove_bid_chips()
+    {
+        // Establish connection
+        $connection = Helpers::get_connection();
+
         $return_amount = -1;
 
         // First select the amount of bid
@@ -119,6 +148,7 @@ class Player
 
         $connection->close();
     }
+
 
     public function set_connection($connected)
     {
@@ -172,7 +202,7 @@ class Player
         );
 
         // Encode to JSON and return
-        return json_encode($player);
+        return $player;
     }
 
     /**
@@ -209,7 +239,7 @@ class Player
      * Checks if the player state need updating
      * @return bool
      */
-    private function needs_update()
+    public function needs_update()
     {
         // Establish connection
         $connection = Helpers::get_connection();

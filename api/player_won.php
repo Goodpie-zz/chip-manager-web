@@ -50,11 +50,11 @@ if ($player != null) {
                 // Reset the bid and add it to the total earnings
                 $losing_player = new Player((int)$row['ID']);
                 $losing_player->load_information();
-                $chips_lost = $losing_player->reset_bid();
+                $chips_lost = $losing_player->remove_bid_chips();
                 $total_earnings += $chips_lost;
 
                 // Update losing player
-                $query = "UPDATE player SET chips_lost = chips_lost + ?, games_lost = games_lost + 1 WHERE ID=?";
+                $query = "UPDATE player SET chips_lost = chips_lost + ?, games_lost = games_lost + 1, needs_update=1 WHERE ID=?";
                 $statement = $connection->prepare($query);
                 $statement->bind_param("ii", $chips_lost, $id);
                 $statement->execute();
@@ -63,8 +63,8 @@ if ($player != null) {
         }
 
         // Now update the current player
-        $total_earnings += $player->reset_bid();
-        $query = "UPDATE player SET chips_won = chips_won + ?, games_won = games_won + 1, chips = chips + ? WHERE ID=?";
+        $total_earnings += $player->remove_bid_chips();
+        $query = "UPDATE player SET chips_won = chips_won + ?, games_won = games_won + 1, chips = chips + ?, needs_update=1 WHERE ID=?";
         $statement = $connection->prepare($query);
         $id = $player->get_id();
         $statement->bind_param('iii', $total_earnings, $total_earnings, $id);

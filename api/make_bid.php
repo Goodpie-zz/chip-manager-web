@@ -46,6 +46,7 @@ if ($id != null && $amount != null) {
         // Make sure the bid was placed correctly
         if ($player->place_bid($amount)) {
             $player->set_needs_update(1);
+            $return_data['data'] = $player->get_all_info();
             $return_data['success'] = 1;
             $return_data['error'] = 0;
         } else {

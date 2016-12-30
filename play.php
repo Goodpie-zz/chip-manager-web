@@ -1,10 +1,13 @@
 <?php
-// Starting the session
-include('php/Player.php');
 
+
+// Include files
+include(__DIR__ . '/php/Player.php');
+require_once(__DIR__ . '/php/Helpers.php');
+
+
+// Start the session
 session_start();
-
-require('php/Helpers.php');
 
 // Make sure the user is already logged in
 if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SESSION])) {
@@ -13,7 +16,7 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
     header("Location: http://$address/login.php");
 } else {
     $player = $_SESSION[Helpers::PLAYER_SESSION];
-    $player->update_player();
+    $player->load_information();
 }
 
 ?>
@@ -29,6 +32,8 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
 </head>
 
 <body>
+<input type="hidden" value="<?php echo $player->get_id() ?>" id="player-id">
+
 <div id="main_container">
     <div id="current_bid_container">
         <!-- Displays the players name -->
