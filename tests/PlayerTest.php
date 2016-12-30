@@ -77,17 +77,18 @@ class PlayerTest extends PHPUnit_Framework_TestCase
         // Test negative bid and invalid amounts
         $this->assertTrue(!$this->player->place_bid(-10));
         $this->assertTrue(!$this->player->place_bid(0));
+
+        $this->player->reset_bid();
     }
 
     public function test_reset_bid()
     {
-        $bid_amount = 5;
+        $bid_amount = 100;
 
         if ($this->player->place_bid($bid_amount)) {
             $result = $this->player->reset_bid();
-            $this->assertTrue($this->player->get_current_bid() == 0);
             $this->assertTrue($result == $bid_amount);
-
+            $this->assertTrue($this->player->get_current_bid() == 0);
         }
 
     }

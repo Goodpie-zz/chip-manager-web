@@ -81,17 +81,12 @@ class Player
         $select_query = "SELECT * FROM player WHERE ID=$this->id LIMIT 1";
         $selected_result = $connection->query($select_query);
 
-        if (!$selected_result) {
-            echo $connection->error . "<br/>";
-        }
-
         if ($row = $selected_result->fetch_array(MYSQLI_ASSOC)) {
             $return_amount = (int)$row['current_bid'];
         }
 
         // Now update the user to have 0 as current_bid
         $this->current_bid = 0;
-        echo $this->current_bid . "\n";
         $update_query = "UPDATE player SET current_bid = ? WHERE ID=$this->id";
         $statement = $connection->prepare($update_query);
         $statement->bind_param("i", $this->current_bid);
