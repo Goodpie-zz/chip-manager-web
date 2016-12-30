@@ -75,7 +75,7 @@ class Player
         // Establish connection
         $connection = Helpers::get_connection();
 
-        $return_amount = 0;
+        $return_amount = -1;
 
         // First select the amount of bid
         $select_query = "SELECT * FROM player WHERE ID=$this->id LIMIT 1";
@@ -104,6 +104,7 @@ class Player
         // Return the amount of chips that were in the bid
         return $return_amount;
     }
+
 
     public function set_needs_update($needs_update)
     {
