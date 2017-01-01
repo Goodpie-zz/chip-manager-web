@@ -62,6 +62,6 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
 <script src="js/bid_client.js"></script>
-<script src="js/form_handling.js"></script>
+<script src="js/mobile_dection.js"></script>
 </body>
 </html>

@@ -103,6 +103,6 @@ if (!empty($_POST)) {
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="js/form_handling.js"></script>
+<script src="js/mobile_dection.js"></script>
 </body>
 </html>
