@@ -133,10 +133,13 @@ function update_player() {
  * @param update_required
  */
 function init_player(update_required) {
+    var address = "api/player/player_info.php?id=" + id + "&needs_update=" + update_required;
+    console.log(address);
     $.ajax({
-        url: "api/player/player_info.php&id=" + id + "&update_required=" + update_required,
+        url: address,
         dataType: 'json',
     }).done(function (data) {
+        console.log(data);
         if (data['success'] != 0) {
 
             // Update the global variables

@@ -1,20 +1,22 @@
 $(document).ready(function () {
-    detectmob();
+    detect_mobile();
 });
 
 $(window).bind('orientationchange resize', function (event) {
     if (event.orientation) {
         if (event.orientation == 'landscape') {
             if (window.rotation == 90) {
-                $("#form_style").attr("href", "css/form_desktop.css");
+                $("#bid_style").attr("href", "style/bid_page_desktop.css");
+                $("#form_style").attr("href", "style/form_desktop.css");
             } else {
-                $("#form_style").attr("href", "css/form_mobile.css");
+                $("#bid_style").attr("href", "style/bid_page_mobile.css");
+                $("#form_style").attr("href", "style/form_mobile.css");
             }
         }
     }
 });
 
-function detectmob() {
+function detect_mobile() {
     if (navigator.userAgent.match(/Android/i)
         || navigator.userAgent.match(/webOS/i)
         || navigator.userAgent.match(/iPhone/i)
@@ -23,9 +25,11 @@ function detectmob() {
         || navigator.userAgent.match(/BlackBerry/i)
         || navigator.userAgent.match(/Windows Phone/i)
     ) {
-        $("#form_style").attr("href", "css/form_mobile.css");
+        $("#bid_style").attr("href", "style/bid_page_mobile.css");
+        $("#form_style").attr("href", "style/form_mobile.css");
     }
     else {
-        $("#form_style").attr("href", "css/form_desktop.css");
+        $("#bid_style").attr("href", "style/bid_page_desktop.css");
+        $("#form_style").attr("href", "style/form_desktop.css");
     }
 }

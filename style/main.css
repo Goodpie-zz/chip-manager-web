@@ -11,16 +11,18 @@ html, body {
     padding: 10px;
 }
 
+/**
+CSS elements for index.php
+ */
+
 .player_container {
     height: 350px;
     width: 300px;
     text-align: center;
     background: #3a3a3a;
     display: inline-block;
-    margin: auto;
     position: relative;
-    margin-top: 10px;
-    margin-left: 10px;
+    margin: 10px auto auto 10px;
 }
 
 .player_name {
@@ -49,7 +51,6 @@ button {
     left: 0;
     margin: 10px;
     width: 280px;
-    marin: 0;
     padding: 20px;
     border: none;
     background: #fd625e;
@@ -57,5 +58,6 @@ button {
 }
 
 button:hover {
-    background: red;
+    background: #E53C38;
+    cursor: pointer;
 }

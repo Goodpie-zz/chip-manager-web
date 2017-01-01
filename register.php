@@ -59,11 +59,15 @@ if (!empty($_POST)) {
 <!DOCTYPE HTML>
 <html>
 <head>
-    <title>Create a user</title>
     <meta charset="utf-8">
+    <title>Create a user</title>
+
+    <!-- Import style sheet -->
+    <link rel="stylesheet" id="form_style" href="style/form_desktop.css">
+
+    <!-- Import Google Fonts (Lato) -->
     <link href='https://fonts.googleapis.com/css?family=Lato:400,100,900' rel='stylesheet' type='text/css'>
-    <!-- Lato Light, Normal, Bold -->
-    <link rel="stylesheet" href="css/style.css">
+
 </head>
 
 <body>
@@ -85,5 +89,7 @@ if (!empty($_POST)) {
         </div>
     </div>
 </div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+<script src="js/form_handling.js"></script>
 </body>
 </html>

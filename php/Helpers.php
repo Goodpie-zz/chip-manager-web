@@ -17,7 +17,8 @@ class Helpers
      */
     public static final function get_address()
     {
-        return $_SERVER['SERVER_ADDR'];
+        $config = parse_ini_file(__DIR__ . '/../config.ini');
+        return $config['address'];
     }
 
     /**

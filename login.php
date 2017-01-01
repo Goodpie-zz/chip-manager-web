@@ -81,7 +81,7 @@ if (!empty($_POST)) {
     <meta charset="utf-8">
     <link href='https://fonts.googleapis.com/css?family=Lato:400,100,900' rel='stylesheet' type='text/css'>
     <!-- Lato Light, Normal, Bold -->
-    <link rel="stylesheet" id="form_style" href="css/form_desktop.css">
+    <link rel="stylesheet" id="form_style" href="style/form_desktop.css">
 </head>
 
 <body>
