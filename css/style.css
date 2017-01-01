@@ -38,7 +38,7 @@ html, body {
     padding: 10px;
 }
 
-.bidding {
+.current_bid {
     font-size: 20px;
     font-weight: bold;
 }

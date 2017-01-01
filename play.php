@@ -41,7 +41,7 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
             Player
         </div>
         <!-- Displays player current chips and bid amounts -->
-        <div id="bid_chips">
+        <div id="current_bid">
             0
         </div>
         <div id="current_chips">
@@ -58,6 +58,6 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="js/bid_handling.js"></script>
+<script src="js/bid_client.js"></script>
 </body>
 </html>

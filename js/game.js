@@ -109,7 +109,7 @@ function add_player_to_page(player_info) {
 
         // Set the player chips fields
         var player_chips = player_container.children(".player_chips");
-        player_chips.children(".bidding").html(player_info['current_bid']);
+        player_chips.children(".current_bid").html(player_info['current_bid']);
         player_chips.children(".chips").html(parseInt(player_info['chips']) + parseInt(player_info['current_bid']));
 
         // Set the player stats fields
