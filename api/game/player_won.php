@@ -4,8 +4,8 @@
  * Handles the player winning a game
  */
 
-include(__DIR__ . '/../php/Player.php');
-require_once(__DIR__ . '/../php/Helpers.php');
+include(__DIR__ . '/../../php/Player.php');
+require_once(__DIR__ . '/../../php/Helpers.php');
 
 // Player defaults to null
 $player = null;
@@ -16,7 +16,6 @@ $return_data = array(
     'success' => 0
 );
 
-echo "Getting params";
 // Get request params
 if (isset($_POST['id'])) {
     // ID was sent through a post request
@@ -29,7 +28,6 @@ if (isset($_POST['id'])) {
 }
 
 // If player is not null, we have a valid player
-echo "loading_player";
 if ($player != null) {
 
     $player->load_information();

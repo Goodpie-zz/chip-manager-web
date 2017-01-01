@@ -9,8 +9,8 @@
 
 
 // Import the required classes
-include(__DIR__ . '/../php/Player.php');
-require_once(__DIR__ . '/../php/Helpers.php');
+include(__DIR__ . '/../../php/Player.php');
+require_once(__DIR__ . '/../../php/Helpers.php');
 
 // Set constants for overly used strings
 const USERNAME = "username";

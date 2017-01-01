@@ -5,12 +5,16 @@
  * Safety checks are handled in @Player class
  */
 
-include(__DIR__ . '/../php/Player.php');
-require_once(__DIR__ . '/../php/Helpers.php');
+
+include(__DIR__ . '/../../php/Player.php');
+require_once(__DIR__ . '/../../php/Helpers.php');
 
 // Constants for overused strings
 const ID = "id";
 const AMOUNT = "amount";
+const ERROR = 'error';
+const SUCCESS = 'success';
+const DATA = 'data';
 
 // Set default values
 $id = null;
@@ -18,8 +22,8 @@ $amount = null;
 
 // Set default return message
 $return_data = array(
-    'error' => 'Invalid parameters',
-    'success' => 0
+    ERROR => 'Invalid parameters',
+    SUCCESS => 0
 );
 
 // Get player information from session
@@ -46,11 +50,11 @@ if ($id != null && $amount != null) {
         // Make sure the bid was placed correctly
         if ($player->place_bid($amount)) {
             $player->set_needs_update(1);
-            $return_data['data'] = $player->get_all_info();
-            $return_data['success'] = 1;
-            $return_data['error'] = 0;
+            $return_data[DATA] = $player->get_all_info();
+            $return_data[SUCCESS] = 1;
+            $return_data[ERROR] = 0;
         } else {
-            $return_data['error'] = "Invalid player ID";
+            $return_data[ERROR] = "Invalid player ID";
         }
 
 

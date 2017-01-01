@@ -52,7 +52,7 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
             <button id="bid_button" onclick="add_bid(5)">+5</button>
             <button id="bid_button" onclick="add_bid(10)">+10</button>
             <button id="bid_button" onclick="add_bid(50)">+50</button>
-            <button id="clear_bid_button" onclick="clear_bid()">Clear</button>
+            <button id="clear_bid_button" onclick="reset_bid()">Clear</button>
         </div>
         <button id="make_bid" onclick="make_bid()">Submit Bid</button>
     </div>

@@ -4,8 +4,8 @@
  * Returns all the IDs of players currently connected to the game
  */
 
-include(__DIR__ . '/../php/Player.php');
-require_once(__DIR__ . '/../php/Helpers.php');
+include(__DIR__ . '/../../php/Player.php');
+require_once(__DIR__ . '/../../php/Helpers.php');
 
 // Set default return data
 $return_data = array(
@@ -17,7 +17,7 @@ $return_data = array(
 $connection = Helpers::get_connection();
 
 // Select all players who are connected
-$query = "SELECT ID FROM player WHERE connected=1";
+$query = "SELECT ID, username, chips, current_bid, games_won, games_lost, chips_won, chips_lost FROM player WHERE connected=1";
 $result = $connection->query($query);
 
 if ($result) {
@@ -29,11 +29,10 @@ if ($result) {
 
         // Get all IDs who are connected
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-            array_push($return_data['data']['players'], (int)$row['ID']);
+            array_push($return_data['data']['players'], $row);
         }
     }
 }
-
 
 
 // Return JSON encoded data

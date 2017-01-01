@@ -78,7 +78,7 @@ class Player
         $bid = -1;
 
         // First select the amount of bid
-        $select_query = "SELECT * FROM player WHERE ID=$this->id LIMIT 1";
+        $select_query = "SELECT current_bid FROM player WHERE ID=$this->id LIMIT 1";
         $selected_result = $connection->query($select_query);
 
         if ($row = $selected_result->fetch_array(MYSQLI_ASSOC)) {
@@ -87,6 +87,7 @@ class Player
 
         // Now update the user to have 0 as current_bid
         $this->current_bid = 0;
+        $this->chips += $bid;
         $update_query = "UPDATE player SET current_bid = ?, chips = chips + ? WHERE ID=$this->id";
         $statement = $connection->prepare($update_query);
         $statement->bind_param("ii", $this->current_bid, $bid);
