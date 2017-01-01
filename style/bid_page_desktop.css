@@ -24,7 +24,7 @@ html, body {
     border: 5px solid #2a2a2a;
 }
 
-#bid_chips {
+#current_bid {
     font-weight: 700;
     font-size: 50px;
 }

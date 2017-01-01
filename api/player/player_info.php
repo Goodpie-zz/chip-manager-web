@@ -4,8 +4,12 @@
  * Retrieves all information about the player
  */
 
+
 include(__DIR__ . '/../../php/Player.php');
 require_once(__DIR__ . '/../../php/Helpers.php');
+
+const NEEDS_UPDATE = 'needs_update';
+const ID = 'id';
 
 // Player defaults to null
 $player = null;
@@ -18,15 +22,15 @@ $return_data = array(
 );
 
 // Get request params
-if (isset($_POST['id']) && isset($_POST['needs_update'])) {
+if (isset($_POST[ID]) && isset($_POST[NEEDS_UPDATE])) {
     // ID was sent through a post request
-    $id = $_POST['id'];
-    $needs_update = $_POST['needs_update'];
+    $id = $_POST[ID];
+    $needs_update = $_POST[NEEDS_UPDATE];
     $player = new Player($id);
-} else if (isset($_GET['id']) && isset($_GET['needs_update'])) {
+} else if (isset($_GET[ID]) && isset($_GET[NEEDS_UPDATE])) {
     // ID was sent through a get request
-    $id = $_GET['id'];
-    $needs_update = $_GET['needs_update'];
+    $id = $_GET[ID];
+    $needs_update = $_GET[NEEDS_UPDATE];
     $player = new Player($id);
 }
 

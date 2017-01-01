@@ -1,0 +1,68 @@
+* {
+    padding: 0;
+    margin: 0;
+}
+
+html, body {
+    height: 100%;
+    background: #222;
+    color: #EEE;
+    font-family: 'Lato', sans-serif;
+}
+
+#main_container {
+    padding: 20px;
+}
+
+#current_bid_container {
+    margin: auto;
+    background: #3a3a3a;
+    height: 90%;
+    width: 90%;
+    padding: 5%;
+    text-align: center;
+    border: 5px solid #2a2a2a;
+}
+
+#name {
+    font-size: 2em;
+}
+
+#current_bid {
+    font-weight: 700;
+    font-size: 2em;
+}
+
+#current_chips {
+    font-weight: 300;
+    font-size: 2em;
+    margin-bottom: 1%;
+}
+
+#bid_amounts {
+    width: 100%;
+}
+
+#bid_amounts button {
+    width: 96%;
+    padding: 2%;
+    font-size: 1em;
+    color: white;
+    border: none;
+    margin: 0;
+    background: #23858A;
+    border-bottom: 1px solid #0F6F73;
+}
+
+#bid_amounts #clear_bid_button {
+    background: #0F6F73;
+}
+
+#make_bid {
+    width: 96%;
+    padding: 2%;
+    font-size: 1em;
+    border: none;
+    background: #FD625E;
+    color: #EEE;
+}

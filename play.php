@@ -25,10 +25,13 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
 
 <html>
 <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=0">
+
     <title>Make Bets</title>
     <link href='https://fonts.googleapis.com/css?family=Lato:400,100,900' rel='stylesheet' type='text/css'>
+
     <!-- Lato Light, Normal, Bold -->
-    <link rel="stylesheet" href="css/bid_page_desktop.css">
+    <link id="bid_style" rel="stylesheet" href="style/bid_page_desktop.css">
 </head>
 
 <body>
@@ -41,7 +44,7 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
             Player
         </div>
         <!-- Displays player current chips and bid amounts -->
-        <div id="bid_chips">
+        <div id="current_bid">
             0
         </div>
         <div id="current_chips">
@@ -58,6 +61,7 @@ if (!isset($_SESSION[Helpers::LOGGED_IN]) && !isset($_SESSION[Helpers::PLAYER_SE
     </div>
 </div>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
-<script src="js/bid_handling.js"></script>
+<script src="js/bid_client.js"></script>
+<script src="js/mobile_dection.js"></script>
 </body>
 </html>
