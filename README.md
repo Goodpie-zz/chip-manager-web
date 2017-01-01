@@ -2,7 +2,12 @@
 
 Handles server / web client side of the Casino Chip Manager.
 This is intended to run on a local server and serve as a  great way to manage chips
-when playing with friends / family. There is no and never will be multigame support on this branch.
+when playing with friends / family.
+
+#### Note:
+
+This app was intended for personal use. I worked on a quick version that I worked on for a whole 5 hours around a year 
+ago and this is my attempt at tidying it up and applying some new knowledge to.
  
 ## Setting Up
 
@@ -54,7 +59,7 @@ similar to the Android app so switching between both shouldn't be an issue
 
 ## API Calls
 
-The API calls are intented for external applications (such as the Android app) as well as for the use of some basic game tasks.
+The API calls are intended for external applications (such as the Android app) as well as for the use of some basic game tasks.
 
 Each php file returns 3 parameters in the form of JSON:
 
@@ -65,3 +70,11 @@ Each php file returns 3 parameters in the form of JSON:
 | success      | Whether the transaction was successful or not (0 or 1)     | TRUE            |
 | data | The data that was returned. Will often have sub levels of JSON.      | FALSE            |
 
+## TODO:
+
+* Use hashed passwords
+* Use media queries in CSS instead of user agent detector and multiple style sheets
+* Write API reference
+* Tidy up API files and Player functions
+* Make sure everything is suited for use by external applications
+* Change overall theme (maybe light and dark)
