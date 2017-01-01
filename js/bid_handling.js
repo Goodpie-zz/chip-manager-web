@@ -1,13 +1,16 @@
-var currently_bid;
+var current_bid;
+var current_chips;
+var id;
+
 
 $(document).ready(function () {
-    currently_bid = 0;
-    make_bid();
-    set_connected();
+    id = $("#player-id").val();
+    init_player(0);
+
 
     var updateInterval = setInterval(function () {
-        refresh();
-    }, 1500)
+        update_player();
+    }, 1500);
 
     var userSession = setInterval(function () {
         log_in_user();
@@ -16,55 +19,95 @@ $(document).ready(function () {
 
 function log_in_user() {
     $.ajax({
-        url: "refresh_user.php"
-    });
-}
-
-function set_connected() {
-    $.ajax({
         url: "connect_player.php"
     });
 }
 
 function add_bid(amt) {
-    var current_chips = parseInt($("#current_chips").html());
-    if (amt <= current_chips) {
-        currently_bid += amt;
-        var chips = parseInt($("#current_chips").html());
-        $("#current_chips").html(parseInt(chips - amt));
-        $("#bid_chips").html(currently_bid);
+    console.log(amt + current_bid);
+    if (current_chips - amt >= 0) {
+        current_bid = current_bid + amt;
+        current_chips = current_chips - amt;
+        $("#current_chips").html(current_chips);
+        $("#bid_chips").html(current_bid);
+
     }
 }
 
-function clear_bid() {
-    currently_bid = 0;
-    make_bid();
+function reset_bid() {
+    $.ajax({
+        url: "api/player/reset_bid.php?id=" + id,
+        dataType: 'json'
+    }).done(function (data) {
+        console.log(data);
+        if (data['success'] != 0) {
+
+            // Set global var values
+            current_chips = parseInt(data['data']['chips']);
+            current_bid = parseInt(data['data']['current_bid']);
+
+            $("#name").html(data['data']['username']);
+            $("#current_chips").html(current_chips);
+            $("#bid_chips").html(current_bid);
+        }
+        else {
+            console.log(data['error']);
+        }
+    });
 }
 
 function make_bid() {
     $.ajax({
-        url: "make_bid.php",
-        method: "POST",
-        data: {amount: currently_bid},
+        url: "api/player/make_bid.php?id=" + id + "&amount=" + current_bid,
         dataType: 'json'
-    }).done(function (p) {
-        $("#name").html(p.name);
-        $("#bid_chips").html(p.bid);
-        $("#current_chips").html(p.chips);
-        currently_bid = 0;
+    }).done(function (data) {
+        if (data['success'] != 0) {
+            $("#name").html(data['data']['username']);
+            $("#current_chips").html(data['data']['chips']);
+            $("#bid_chips").html(data['data']['current_bid']);
+        }
+        else {
+            console.log(data['error']);
+        }
     });
 }
 
-
-function refresh() {
+function update_player() {
     $.ajax({
-        url: "update_player.php",
+        url: "api/player/update.php?id=" + id,
         dataType: 'json'
-    }).done(function (p) {
-        if (p != null || p != "0") {
-            $("#name").html(p.name);
-            $("#current_chips").html(p.chips);
-            $("#bid_chips").html(p.bid);
+    }).done(function (data) {
+
+        if (data['success'] != 0) {
+
+            if (data['data']['needs_update'] == 1) {
+                var player = data['data']['player'];
+                current_bid = parseInt(player['current_bid']);
+                current_chips = parseInt(player['chips']);
+                $("#name").html(player['username']);
+                $("#current_chips").html(current_chips);
+                $("#bid_chips").html(current_bid);
+            }
+
+
+        }
+    });
+}
+
+function init_player(update_required) {
+    $.ajax({
+        url: "api/player/player_info.php",
+        dataType: 'json',
+        method: 'POST',
+        data: {id: id, needs_update: update_required}
+    }).done(function (data) {
+        if (data['success'] != 0) {
+            current_bid = parseInt(data['data']['current_bid']);
+            current_chips = parseInt(data['data']['chips']);
+            $("#name").html(data['data']['username']);
+            $("#current_chips").html(current_chips);
+            $("#bid_chips").html(current_bid);
+
         }
     });
 }

@@ -1,13 +1,13 @@
 <?php
-include('php/Player.php');
-require('php/Helpers.php');
+include(__DIR__ . '/php/Player.php');
+require_once(__DIR__ . '/php/Helpers.php');
 
 session_start();
 
 if (isset($_SESSION[Helpers::LOGGED_IN]) && isset($_SESSION[Helpers::PLAYER_SESSION])) {
     // Disconnect player
     $player = $_SESSION[Helpers::PLAYER_SESSION];
-    $player->set_connection_status(0);
+    $player->set_connection(0);
 
     // Unset the session variables
     unset($_SESSION[Helpers::LOGGED_IN]);

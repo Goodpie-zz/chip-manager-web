@@ -1,9 +1,8 @@
-var first_run = true;
 var all_players = [];
 
 $(document).ready(function () {
 
-    init_stats();
+    update_stats();
     var update_tick = setInterval(function () {
         update_stats()
     }, 2000);
@@ -13,111 +12,100 @@ $(document).ready(function () {
 
 });
 
-function init_stats() {
+function update_stats() {
 
     $.ajax({
-        url: "get_player_information.php",
+        url: "api/game/connected_players_info.php",
         dataType: 'json'
-    }).done(function (playerArray) { // When AJAX request is complete, update page
-        if (playerArray.length > 0) {
-            for (var x = 0; x < playerArray.length; x++) {
-                // Extract current player from array
-                var player = playerArray[x];
-                add_player(player);
+    }).done(function (data) {
+        // Successfully fetched information, now update players
+        // First check there are no issues
+
+        var error = data['error'];
+        if (error == 0) {
+            var connected_players = data['data']['players'];
+            var old_players = all_players;
+            all_players = [];
+            // Loop through player ID's and refresh players
+            for (var i = 0; i < connected_players.length; i++) {
+                var player_info = connected_players[i];
+                all_players.push(player_info['ID']);
+                add_player_to_page(player_info);
+            }
+
+            for (var j = 0; j < old_players.length; j++) {
+                var player_found = false;
+                for (var k = 0; k < all_players.length; k++) {
+                    if (old_players[j] === all_players[k]) {
+                        player_found = true;
+                        break;
+                    }
+                }
+
+                if (!player_found) {
+                    $("#player_" + old_players[j]).remove();
+                }
             }
         }
     });
-
 }
 
-function add_player(player) {
-    // Extract JSON elements
-    var id = player.id;
-    var name = player.name;
-    var chips = parseInt(player.chips);
-    var bid = parseInt(player.bid);
-    var wins = parseInt(player.wins);
-    var losses = parseInt(player.losses);
-    var chips_won = parseInt(player.chips_won);
-    var chips_lost = parseInt(player.chips_lost);
+function player_has_won(id) {
+    $.ajax({
+        url: "api/game/player_won.php?id=" + id,
+        dataType: 'json'
+    }).done(function (data) {
+        if (data['error'] != 0) {
+            update_stats();
+        }
+    });
+}
 
-    var total_games = wins + losses;
-    all_players.push(id);
+function add_player_to_page(player_info) {
 
+    var id = player_info["ID"];
     $("#main_container").append(
         $("<div />").attr({class: "player_container", id: "player_" + id}).css("display", "none")
     );
 
-    $("#player_" + id).append(
-        $("<div />").attr({class: "player_name"}).html(name)
-    );
+    // Add all information to the player container
+    var player_container = $("#player_" + id);
 
-    $("#player_" + id).append(
-        $("<div />").attr({class: "player_chips"}).html("Chips:<br/><span class='bidding'>" + bid + "</span>/<span class='chips'>" + chips + "</span>")
-    );
+    player_container.load("player_layout.html", function () {
+        console.log(player_info['username']);
+        $('> .player_name', player_container).html(player_info['username']);
+        player_container.children(".player_name").text(player_info['username']);
 
-    $("#player_" + id).append(
-        $("<div />").attr({class: "player_stats"}).html(' Win / Loss (Games)<br/><span class="wins">' + wins + '</span>/<span class="losses">' + losses + '</span> (<span class="total_games">' + total_games + '</span>)<br/><br/>Chips Won / Chips Lost<br/><span class="chips_won">' + chips_won + '</span>/<span class="chips_lost">' + chips_lost + '</span>')
-    );
+        var player_chips = player_container.children(".player_chips");
+        player_chips.children(".bidding").html(player_info['current_bid']);
+        player_chips.children(".chips").html(parseInt(player_info['chips']) + parseInt(player_info['current_bid']));
 
-    $("#player_" + id).append('<button class="player_won" onclick="player_has_won(' + id + ')">Player Has Won</button>');
+        var player_stats = player_container.find(".player_stats");
+        player_stats.find(".wins").html(player_info['games_won']);
+        player_stats.find(".losses").html(player_info['games_lost']);
+        player_stats.find(".chips_won").html(player_info['chips_won']);
+        player_stats.find(".chips_lost").html(player_info['chips_lost']);
 
-    $("#player_" + id).fadeIn(1000);
+        var win_button = player_container.find(".player_won");
+        win_button.attr("onclick", "player_has_won(" + id + ")");
 
-}
-
-function player_has_won(id) {
-    console.log("ayy");
-    $.ajax({
-        url: "player_has_won.php",
-        method: "POST",
-        data: {id: id}
-    }).done(function () {
-        update_stats();
+        // Unhide the player stats
+        player_container.fadeIn(1000);
     });
 
 }
 
-function update_stats() {
-    var current_players = [];
-    $.ajax({
-        url: "get_player_information.php",
-        dataType: 'json'
-    }).done(function (playerArray) {
-        if (playerArray.length > 0) {
-            for (var x = 0; x < playerArray.length; x++) {
-
-                // Extract current player from array
-                var player = playerArray[x];
-
-                // Extract JSON vars
-                var id = player.id;
-                current_players.push(id);
-
-                if (all_players.indexOf(id) > -1) {
-                    var name = player.name;
-                    var chips = parseInt(player.chips);
-                    var bid = parseInt(player.bid);
-                    var wins = parseInt(player.wins);
-                    var losses = parseInt(player.losses);
-                    var chips_won = parseInt(player.chips_won);
-                    var chips_lost = parseInt(player.chips_lost);
-
-                    var total_games = wins + losses;
-
-                    // Update HTML
-                    $("#player_" + id + " .chips").html(chips);
-                    $("#player_" + id + " .bidding").html(bid);
-                    $("#player_" + id + " .wins").html(wins);
-                    $("#player_" + id + " .losses").html(losses);
-                    $("#player_" + id + " .total_games").html(total_games);
-                    $("#player_" + id + " .chips_won").html(chips_won);
-                    $("#player_" + id + " .chips_lost").html(chips_lost);
-                } else {
-                    add_player(player);
-                }
-            }
-
-        }
-    });
+function check_json(data) {
+    var jsonData = JSON.stringify(data, null, 4);
+    var newWindow = window.open();
+    newWindow.document.open();
+    newWindow.document.write("" +
+        "<html>" +
+        "   <head>" +
+        "       <title>JSON test</title> " +
+        "   </head>" +
+        "   <body>" +
+        "       <pre>" + jsonData + "</pre>" +
+        "   </body>" +
+        "</html>");
 }

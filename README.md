@@ -52,3 +52,63 @@ The index page will list everyone who is playing at the moment (by getting their
 similar to the Android app so switching between both shouldn't be an issue
 
 
+## API Calls
+
+The API calls are intented for external applications (such as the Android app) as well as for the use of some basic game tasks.
+
+Each php file returns 3 parameters in the form of JSON:
+
+
+| Name          | Description   | Always Present  |
+| :------------ |:------------- | :-------------- |
+| error      | If there is an error message present, a string description will be returned. Else, 0 will be returned | TRUE           |
+| success      | Whether the transaction was successful or not (0 or 1)     | TRUE            |
+| data | The data that was returned. Will often have sub levels of JSON.      | FALSE            |
+
+
+#### get_connected_players.php
+
+##### Description:
+
+Returns the ID's of all the connected players. Useful for checking if there are any new players joining the game.
+
+##### Parameters:
+
+None
+
+##### Returns:
+
+* `rows`: Amount of users connected
+* `players`: Array of player ID's
+
+#### get_connected_players_info.php
+
+##### Description:
+
+Returns all the useful information about the connected players. Useful for initializing the game
+
+##### Parameters:
+
+None
+
+##### Returns:
+
+* `rows`: Amount of users connected
+* `players`: Array of all the players in JSON form
+
+#### login.php
+
+Sets a players status to connected and returns all the user information
+
+##### Parameters:
+
+| Request Type | Name | Description |
+| :----------- | :--- | :---------- |
+| GET          | username | The username the user is trying to login with |
+| GET | password | The password the user is trying to login with |
+| POST | username | The username the user is trying to login with. THIS IS FOR DEBUGGING ONLY |
+| POST | password | The password the user is trying to login with. THIS IS FOR DEBUGGING ONLY |
+
+##### Returns:
+
+All the player information

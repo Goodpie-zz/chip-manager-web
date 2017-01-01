@@ -1,6 +1,6 @@
 <?php
 
-require("php/Helpers.php");
+require_once(__DIR__ . "/php/Helpers.php");
 
 $address = Helpers::get_address();
 
@@ -16,7 +16,7 @@ if (!empty($_POST)) {
     $connection = Helpers::get_connection();
 
     // Retrieve POST parameters
-    $username = $_POST['name'];
+    $username = $_POST['username'];
     $password = $_POST['password'];
 
     // Checks if the user already exists
@@ -78,8 +78,7 @@ if (!empty($_POST)) {
         <!-- Form for the user to fill out to create their account -->
         <div id="form_fields">
             <form method="POST" action="register.php">
-                <input type="text" name="name" placeholder="Name" maxlength="20"><br/>
-                <input type="text" name="user" placeholder="Username (Initials)" maxlength="4"><br/>
+                <input type="text" name="username" placeholder="Username" maxlength="20"><br/>
                 <input type="password" name="password" placeholder="Password" maxlength="20"><br/>
                 <input type="submit" id="register_submit" value="Register">
             </form>
