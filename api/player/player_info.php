@@ -37,9 +37,9 @@ if (isset($_POST[ID]) && isset($_POST[NEEDS_UPDATE])) {
 // If player was found,
 if ($player != null) {
 
-    $requires_update = (($needs_update && $player->needs_update() == 1) || (!$needs_update));
-    if ($requires_update) {
-        if ($player->load_information()) {
+    if ($player->load_information()) {
+        $requires_update = (($needs_update && $player->needs_update() == 1) || (!$needs_update));
+        if ($requires_update) {
 
             // Set success data
             $return_data['data'] = $player->get_all_info();
@@ -47,13 +47,14 @@ if ($player != null) {
             $return_data['success'] = 1;
 
         } else {
-            // Failed to fetch data so return error message
-            $return_data['error'] = "Unable to load player $id information";
+            $return_data['error'] = "No update required";
         }
     } else {
-        $return_data['error'] = "No update required";
+        // Failed to fetch data so return error message
+        $return_data['error'] = "Unable to load player $id information";
     }
-}
+
+    }
 
 
 // Return data

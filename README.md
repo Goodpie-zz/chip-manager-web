@@ -70,6 +70,84 @@ Each php file returns 3 parameters in the form of JSON:
 | success      | Whether the transaction was successful or not (0 or 1)     | TRUE            |
 | data | The data that was returned. Will often have sub levels of JSON.      | FALSE            |
 
+
+### Game
+
+API calls that affect the game in progress or get information about the current game. These are stored in the `api/game` directory.
+
+
+#### connected_players.php
+
+Get's all the connected players ID's in an array under `data['players']`.
+
+#### connected_players_info.php
+
+Get's all the connected players information including:
+
+* ID
+* username
+* chips
+* current_bid
+* games_won
+* games_lost
+* chips_won
+* chips_lost
+
+The player information is stored under `data['players']`.
+
+#### login.php
+
+Logs in the player based on username / password combination and sets the player as connected.
+
+Requires two `POST` parameters:
+
+* `username` - Username of player to login
+* `password` - Password to verify the player
+
+#### player_won.php
+
+Let's the game know the player has won the current game. They will receive all the chips that all players have bid.
+
+Requires one `GET` or `POST` parameter:
+
+* `ID` - The winning players ID
+
+For verification, it returns the winning players ID under `data['winner']` and the amount the player has won under `data['chips_won']`.
+
+### Player
+
+API calls that affect the player. Requires the `ID` as a `GET` or `POST` parameter.
+
+#### make_bid.php
+
+Places a new bid for the player.
+
+Requires an additional `GET` or `POST` parameter:
+
+* `amount` - The amount the player wants to bet
+
+Returns all player info under `data`
+
+#### player_info.php
+
+Gets all the users current information.
+
+Takes an additional optional parameter:
+ 
+ * `needs_update` - If set to `1`, will check if the player needs to be updated before returning information
+ 
+ Returns all player info under `data`
+ 
+#### reset_bid.php
+
+Resets the player current bid to `0`
+
+#### update.php
+
+Checks if the player needs to be updated. If so, return all player information.
+
+Returns whether the player was updated under `data['needs_update']` and information about the player under `data['player']`
+
 ## TODO:
 
 * Use hashed passwords
