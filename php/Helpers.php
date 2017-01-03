@@ -1,8 +1,13 @@
 <?php
 
+/**
+ * Class Helpers
+ *
+ * Contains static functions and constants that are there to help!
+ */
 class Helpers
 {
-    // Define connection codes
+    // Connection constants
     const CONNECTED = 1;
     const DISCONNECTED = 0;
 
@@ -11,9 +16,11 @@ class Helpers
     const LOGGED_IN = "logged_in";
 
     /**
-     * Gets the address of the server
+     * Gets server address
+     *
+     * Gets the server address from the config file in the root directory
+     *
      * @return mixed
-     * @internal param bool $root
      */
     public static final function get_address()
     {
@@ -22,9 +29,12 @@ class Helpers
     }
 
     /**
-     * Establish connection to database
+     * Connect to database
+     *
+     * Establishes connection to the database by loading parameters from a config file in the root directory and
+     * creating a MySQLi object
+     *
      * @return mysqli
-     * @internal param bool $root
      */
     public static final function get_connection()
     {
@@ -38,7 +48,7 @@ class Helpers
         $server = $config['server'];
         $database = $config['database'];
 
-        // Create connection using MySQLI object
+        // Create connection using MySQLi object
         $connection = new mysqli(
             $server,
             $username,
@@ -55,12 +65,15 @@ class Helpers
     }
 
     /**
-     * Logs error message to file
-     * @param $message
+     * Logs error message
+     *
+     * Used to log error messages to the defined error file in the config
+     *
+     * @param string $message Message to log
      */
     public static final function log_error_message($message)
     {
-        $config = parse_ini_file("config.ini");
+        $config = $config = parse_ini_file(__DIR__ . '/../config.ini');
         $log_file = $config['logfile'];
 
         // Log the error

@@ -56,6 +56,7 @@ function add_bid(amt) {
  * Resets the users current bid using an AJAX request
  */
 function reset_bid() {
+
     $.ajax({
         url: "api/player/reset_bid.php?id=" + id,
         dataType: 'json'
@@ -79,6 +80,7 @@ function reset_bid() {
  * Makes a bid based on the users current bid
  */
 function make_bid() {
+
     $.ajax({
         url: "api/player/make_bid.php?id=" + id + "&amount=" + current_bid,
         dataType: 'json'
@@ -101,6 +103,7 @@ function make_bid() {
  * Updates all information about the current user using an AJAX request
  */
 function update_player() {
+
     $.ajax({
         url: "api/player/update.php?id=" + id,
         dataType: 'json'
@@ -129,15 +132,17 @@ function update_player() {
 }
 
 /**
- * Grabs all the player information
+ * Grabs all the player information using an AJAX request
  * @param update_required
  */
 function init_player(update_required) {
+
+    // Address to api call using get params
     var address = "api/player/player_info.php?id=" + id + "&needs_update=" + update_required;
-    console.log(address);
+
     $.ajax({
         url: address,
-        dataType: 'json',
+        dataType: 'json'
     }).done(function (data) {
         console.log(data);
         if (data['success'] != 0) {
