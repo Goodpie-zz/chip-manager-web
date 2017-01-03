@@ -2,6 +2,13 @@
 
 require_once(__DIR__ . '/../php/Helpers.php');
 
+/**
+ * Class Player
+ *
+ * Holds information and methods related specifically to the player
+ *
+ * @author GoodPie
+ */
 class Player
 {
     private $id;
@@ -14,8 +21,11 @@ class Player
     private $games_lost;
 
     /**
-     * Player constructor.
-     * @param $id
+     * Default Constructor
+     *
+     * Initialized the player with the default values
+     *
+     * @param int $id
      */
     public function __construct($id)
     {
@@ -30,8 +40,12 @@ class Player
     }
 
     /**
-     * @param $amount
-     * @return bool
+     * Places a bid for the player
+     *
+     * Adds $amount to the current players bid and updates the database with that information
+     *
+     * @param   int $amount The amount the player wants to increment their current bid by
+     * @return  bool            Whether the bid was placed successfully
      */
     public function place_bid($amount)
     {
@@ -39,7 +53,7 @@ class Player
         $bid_placed = false;
 
         if ($amount <= $this->chips && $amount > 0) {
-            // Fetch the current values from the db
+            // Fetch the current values from the db to ensure we are up to date
             $select_success = false;
             $select_query = "SELECT current_bid, chips FROM player WHERE ID=$this->id LIMIT 1";
 
@@ -70,6 +84,12 @@ class Player
         return $bid_placed;
     }
 
+    /**
+     * Resets the player bid
+     *
+     * Resets the players bid to 0 and adds that amount back to the players chips. Then updates
+     * the database with this information
+     */
     public function reset_bid()
     {
         // Establish connection
@@ -100,15 +120,22 @@ class Player
         $connection->close();
     }
 
+    /**
+     * Resets the players bid chips
+     *
+     * Removes the players current bid without returning them to their current chips
+     *
+     * @return int  The amount of chips that the player lost
+     */
     public function remove_bid_chips()
     {
         // Establish connection
         $connection = Helpers::get_connection();
 
-        $return_amount = -1;
+        $return_amount = 0;
 
         // First select the amount of bid
-        $select_query = "SELECT * FROM player WHERE ID=$this->id LIMIT 1";
+        $select_query = "SELECT current_bid FROM player WHERE ID=$this->id LIMIT 1";
         $selected_result = $connection->query($select_query);
 
         if ($row = $selected_result->fetch_array(MYSQLI_ASSOC)) {
@@ -135,7 +162,11 @@ class Player
         return $return_amount;
     }
 
-
+    /**
+     * Modifies the update status of the player
+     *
+     * @param int $needs_update
+     */
     public function set_needs_update($needs_update)
     {
         $connection = Helpers::get_connection();
@@ -150,7 +181,11 @@ class Player
         $connection->close();
     }
 
-
+    /**
+     * Modifies the connection status of the player
+     *
+     * @param int $connected
+     */
     public function set_connection($connected)
     {
         // Check that we have a valid parameter
@@ -171,7 +206,17 @@ class Player
     }
 
     /**
-     * @return string
+     * Gets common information about the player
+     *
+     * Returns the players:
+     *
+     * * username
+     * * chips
+     * * current_bid
+     *
+     * Only returns locally stored variables. Update may be required before calling this.
+     *
+     * @return string JSON encoded information about the player
      */
     public function get_simple_info()
     {
@@ -187,6 +232,20 @@ class Player
     }
 
     /**
+     * Gets all the information about the player
+     *
+     * Returns the players:
+     *
+     * * username
+     * * chips
+     * * current_bid
+     * * chips_won
+     * * chips_lost
+     * * games_won
+     * * games_lost
+     *
+     * Only returns locally stored variables. May require update before calling
+     *
      * @return string
      */
     public function get_all_info()
@@ -207,7 +266,12 @@ class Player
     }
 
     /**
-     * Updates the player information
+     * Update player information
+     *
+     * Checks if the player needs to be updated before fetching information from the player
+     *
+     * @return bool
+     *
      */
     public function update()
     {
@@ -238,6 +302,7 @@ class Player
 
     /**
      * Checks if the player state need updating
+     *
      * @return bool
      */
     public function needs_update()
@@ -263,7 +328,12 @@ class Player
     }
 
     /**
-     * Loads all player information
+     * Loads player information
+     *
+     * Fetches the player information from the database and populates the class fields with
+     * the updated player information
+     *
+     * @return bool Whether fetching the information was successful or not
      */
     public function load_information()
     {
@@ -294,7 +364,7 @@ class Player
             $success = false;
         }
 
-
+        // Close the connection
         $connection->close();
 
         return $success;
@@ -302,6 +372,7 @@ class Player
 
     /**
      * Check if the user is connected
+     *
      * @return bool
      */
     public function is_connected()
