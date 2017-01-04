@@ -51,6 +51,15 @@ The index page will list everyone who is playing at the moment (by getting their
 `play.php` handles the client side of the game and allows people to play via a mobile friendly web client. This is very
 similar to the Android app so switching between both shouldn't be an issue
 
+### Intended Use
+
+A main screen will be present at the game table and this will display the `index.php` page. 
+
+Players will then use their own devices to access the server running the game, register using `register.php`, login using `login.php` and then be 
+redirected to `play.php` where they will be able to place bids and participate in the game.
+
+As players place bids, their information will be shown on the main screen. When a player wins, clicking "player has won"
+will transfer all the bid chips to that player.
 
 ## API Calls
 
