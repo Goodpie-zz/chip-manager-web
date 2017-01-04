@@ -1,13 +1,8 @@
 # Chip Manager Web
 
-Handles server / web client side of the Casino Chip Manager.
-This is intended to run on a local server and serve as a  great way to manage chips
-when playing with friends / family.
-
-#### Note:
-
-This app was intended for personal use. I worked on a quick version that I worked on for a whole 5 hours around a year 
-ago and this is my attempt at tidying it up and applying some new knowledge to.
+Web app that requires one machine to be running a local server. Players can then register, login and connect to the main
+game. Players can then see their information on the main device (a device to display the index page to all users) as well 
+as on their own device (preferably a mobile device) and place bids against each other.
  
 ## Setting Up
 
