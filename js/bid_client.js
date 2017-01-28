@@ -14,7 +14,7 @@ $(document).ready(function () {
     // Set interval to update the player information
     setInterval(function () {
         update_player();
-    }, 1500);
+    }, 500);
 
     // Set interval to refresh the user session
     setInterval(function () {
@@ -112,8 +112,11 @@ function update_player() {
         // Check that request was successful
         if (data['success'] === 1) {
 
+
+
             var needs_update = data['data']['needs_update'];
             if (needs_update == 1) {
+                console.log("Player updated");3
                 var player = data['data']['player'];
 
                 // Update global vars

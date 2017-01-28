@@ -1,4 +1,16 @@
 var all_players = [];
+var total_pot = 0;
+
+var player_colors = [];
+var colors = ["blue", "red", "yellow", "green", "orange", "purple"];
+var color_schemes = {
+    "blue":{"primary":"#2196F3", "dark_primary":"#1976D2"},
+    "red":{"primary":"#F44336", "dark_primary":"#D32F2F"},
+    "yellow":{"primary":"#FFC107", "dark_primary":"#FFA000"},
+    "green":{"primary":"#4CAF50", "dark_primary":"#388E3C"},
+    "orange":{"primary":"#FF5722", "dark_primary":"#E64A19"},
+    "purple":{"primary":"#9C27B0", "dark_primary":"#7B1FA2"}
+};
 
 // Execute when the page is loaded
 $(document).ready(function () {
@@ -9,7 +21,7 @@ $(document).ready(function () {
     // Timer to update the player stats
     setInterval(function () {
         update_stats()
-    }, 2000);
+    }, 1500);
 
     // Timer to reload the page after extended duration to prevent crashes that may occur
     setTimeout(function () {
@@ -32,6 +44,8 @@ function update_stats() {
         // First check there are no issues
         if (data['error'] == 0) {
 
+            total_pot = 0;
+
             // Get all the connected players from the return data
             var connected_players = data['data']['players'];
 
@@ -46,7 +60,10 @@ function update_stats() {
 
                 // Add the new player to the page
                 add_player_to_page(player_info);
+                total_pot += (parseInt(player_info['current_bid']));
             }
+
+            $("#pot_total").html(total_pot);
 
             // Loop through the old players and new players and check for disconnected players
             for (var j = 0; j < old_players.length; j++) {
@@ -92,6 +109,27 @@ function add_player_to_page(player_info) {
 
     // Get the new players ID
     var id = player_info["ID"];
+    var color_scheme;
+
+    var color_scheme_exists = false;
+    for (var ii = 0; ii < player_colors.length;ii ++)
+    {
+        var obj = player_colors[ii];
+        if (obj[id] != undefined)
+        {
+            color_scheme = obj[id];
+            color_scheme_exists = true;
+            break;
+        }
+    }
+
+    if (!color_scheme_exists)
+    {
+        color_scheme = color_schemes[colors[parseInt(Math.random() * colors.length)]];
+        var player_scheme = {};
+        player_scheme[id] = color_scheme;
+        player_colors.push(player_scheme);
+    }
 
     // Create a new div element in the main container to hold the new player information
     $("#main_container").append(
@@ -105,6 +143,7 @@ function add_player_to_page(player_info) {
 
         // Get the newly created container
         $('> .player_name', player_container).html(player_info['username']);
+        player_container.children(".player_name").css("background", color_scheme["primary"]);
         player_container.children(".player_name").text(player_info['username']);
 
         // Set the player chips fields
@@ -121,6 +160,12 @@ function add_player_to_page(player_info) {
 
         var win_button = player_container.find(".player_won");
         win_button.attr("onclick", "player_has_won(" + id + ")");
+        win_button.css("background", color_scheme["primary"]);
+        win_button.mouseover(function(){
+            $(this).css("background", color_scheme["dark_primary"]);
+        }).mouseout(function(){
+            $(this).css("background", color_scheme["primary"]);
+        });
 
         // Show the player stats
         player_container.fadeIn(1000);

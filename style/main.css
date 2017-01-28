@@ -5,8 +5,18 @@ html, body {
     color: #EEE;
 }
 
+#pot_container {
+    left: 0;
+    position: absolute;
+    top: 0;
+    font-weight: bold;
+    text-align: center;
+    background: #E53C38;
+    padding: 10px;
+}
+
 #main_container {
-    margin: auto;
+    margin: 25px auto auto;
     text-align: center;
     padding: 10px;
 }

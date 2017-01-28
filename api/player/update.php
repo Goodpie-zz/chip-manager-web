@@ -41,7 +41,7 @@ if ($player != null) {
     if ($player->needs_update()) {
         $return_data[SUCCESS] = 1;
         $return_data[ERROR] = 0;
-        $return_data[DATA][NEEDS_UPDATE] = 0;
+        $return_data[DATA][NEEDS_UPDATE] = 1;
 
         $player->update();
 

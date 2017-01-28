@@ -63,8 +63,9 @@ class Player
                 $select_success = true;
 
                 // Update the local parameters to match database
-                $this->current_bid = $row['current_bid'] + $amount;
-                $this->chips = $row['chips'] - $amount;
+                $difference = $amount - $this->current_bid;
+                $this->chips = $this->chips - $difference;
+                $this->current_bid = $amount;
             }
 
             if ($select_success) {
